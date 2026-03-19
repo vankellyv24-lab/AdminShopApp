@@ -12,6 +12,7 @@
 /.vscode
 /.zed
 /auth.json
+/config/firebase-admin.json
 /node_modules
 /public/build
 /public/hot
