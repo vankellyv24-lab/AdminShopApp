@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./storage/app:/app/storage/app
+    environment:
+      - FIREBASE_CREDENTIALS=storage/app/firebase-admin.json
