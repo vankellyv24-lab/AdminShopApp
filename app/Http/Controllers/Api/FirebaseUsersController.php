@@ -13,10 +13,31 @@ class FirebaseUsersController extends Controller
     private function getAccessToken(): string
     {
         $credentialsPath = config('services.firebase.credentials');
-        $fullPath = base_path($credentialsPath);
+        
+        // Try multiple path resolution strategies
+        $possiblePaths = [
+            // If it's already an absolute path
+            $credentialsPath,
+            // If path starts with storage/
+            storage_path(str_replace('storage/', '', $credentialsPath)),
+            // Direct storage path
+            storage_path($credentialsPath),
+            // From base path
+            base_path($credentialsPath),
+            // Hardcoded fallback
+            storage_path('app/firebase-admin.json'),
+        ];
 
-        if (!is_file($fullPath)) {
-            throw new \RuntimeException("Firebase credentials not found: {$fullPath}");
+        $fullPath = null;
+        foreach ($possiblePaths as $path) {
+            if (is_file($path)) {
+                $fullPath = $path;
+                break;
+            }
+        }
+
+        if (!$fullPath) {
+            throw new \RuntimeException("Firebase credentials not found. Tried: " . implode(', ', $possiblePaths));
         }
 
         $credentials = json_decode(file_get_contents($fullPath), true);
