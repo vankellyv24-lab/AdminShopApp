@@ -48,16 +48,23 @@ class OrderController extends Controller
             'items.*.qty' => ['required', 'integer', 'min:1'],
             'payment_method' => ['nullable', 'string', 'max:50'],
             'currency' => ['nullable', 'string', 'size:3'],
+            'shipping' => ['nullable', 'array'],
+            'shipping.fullName' => ['nullable', 'string', 'max:191'],
+            'shipping.address' => ['nullable', 'string', 'max:500'],
+            'shipping.city' => ['nullable', 'string', 'max:100'],
+            'shipping.country' => ['nullable', 'string', 'max:100'],
+            'shipping.phone' => ['nullable', 'string', 'max:50'],
         ]);
 
         $currency = $validated['currency'] ?? 'USD';
+        $shipping = $validated['shipping'] ?? [];
 
         $itemsInput = $validated['items'];
 
         $productIds = collect($itemsInput)->pluck('product_id')->all();
         $products = Product::query()->whereIn('id', $productIds)->get()->keyBy('id');
 
-        return DB::transaction(function () use ($userId, $itemsInput, $products, $currency, $validated) {
+        return DB::transaction(function () use ($userId, $itemsInput, $products, $currency, $validated, $shipping) {
             $subtotal = 0;
             $order = Order::create([
                 'user_id' => $userId,
@@ -67,6 +74,11 @@ class OrderController extends Controller
                 'total' => 0,
                 'currency' => $currency,
                 'payment_method' => $validated['payment_method'] ?? null,
+                'shipping_name' => $shipping['fullName'] ?? null,
+                'shipping_address' => $shipping['address'] ?? null,
+                'shipping_city' => $shipping['city'] ?? null,
+                'shipping_country' => $shipping['country'] ?? null,
+                'shipping_phone' => $shipping['phone'] ?? null,
             ]);
 
             foreach ($itemsInput as $it) {

@@ -20,6 +20,11 @@ class Order extends Model
         'currency',
         'payment_method',
         'payment_ref',
+        'shipping_name',
+        'shipping_address',
+        'shipping_city',
+        'shipping_country',
+        'shipping_phone',
     ];
 
     protected $casts = [
@@ -27,6 +32,21 @@ class Order extends Model
         'shipping_fee' => 'decimal:2',
         'total' => 'decimal:2',
     ];
+
+    protected $appends = ['shipping_full_address'];
+
+    public function getShippingFullAddressAttribute(): ?string
+    {
+        if (!$this->shipping_address) {
+            return null;
+        }
+        $parts = array_filter([
+            $this->shipping_address,
+            $this->shipping_city,
+            $this->shipping_country,
+        ]);
+        return implode(', ', $parts);
+    }
 
     public function user(): BelongsTo
     {

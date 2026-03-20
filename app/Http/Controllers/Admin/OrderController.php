@@ -82,6 +82,11 @@ class OrderController extends Controller
                     'currency' => ['stringValue' => $order->currency ?? 'USD'],
                     'payment_method' => ['stringValue' => $order->payment_method ?? 'card'],
                     'payment_ref' => ['stringValue' => $order->payment_ref ?? ''],
+                    'shipping_name' => ['stringValue' => $order->shipping_name ?? ''],
+                    'shipping_address' => ['stringValue' => $order->shipping_address ?? ''],
+                    'shipping_city' => ['stringValue' => $order->shipping_city ?? ''],
+                    'shipping_country' => ['stringValue' => $order->shipping_country ?? ''],
+                    'shipping_phone' => ['stringValue' => $order->shipping_phone ?? ''],
                     'updatedAt' => ['timestampValue' => now()->toIso8601String()],
                 ]
             ];

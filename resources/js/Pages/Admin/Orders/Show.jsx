@@ -221,6 +221,26 @@ export default function Show({ order }) {
                 </div>
               </div>
 
+              {/* Shipping Address */}
+              <div className="rounded-xl bg-white shadow-sm border border-gray-100 p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  Shipping Address
+                </h3>
+                {order.shipping_address ? (
+                  <div className="space-y-1">
+                    <p className="font-medium text-gray-900">{order.shipping_name}</p>
+                    <p className="text-sm text-gray-600">{order.shipping_address}</p>
+                    <p className="text-sm text-gray-600">{order.shipping_city}, {order.shipping_country}</p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      <span className="font-medium">Phone:</span> {order.shipping_phone}
+                    </p>
+                  </div>
+                ) : (
+                  <p className="text-sm text-gray-500 italic">No shipping address provided</p>
+                )}
+              </div>
+
               {/* Order Summary */}
               <div className="rounded-xl bg-white shadow-sm border border-gray-100 p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Order Summary</h3>
